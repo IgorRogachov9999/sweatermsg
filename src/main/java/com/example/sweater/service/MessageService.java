@@ -2,7 +2,9 @@ package com.example.sweater.service;
 
 import com.example.sweater.domain.Message;
 import com.example.sweater.domain.User;
+import com.example.sweater.model.Chat;
 import com.example.sweater.repos.MessageRepo;
+import com.example.sweater.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,33 +18,31 @@ public class MessageService {
     @Autowired
     private MessageRepo messageRepo;
 
-    public List<Message> getChatsMessages(User user) {
+    @Autowired
+    private UserRepo userRepo;
+
+    public List<Chat> getChatsMessages(Long id) {
         List<Message> allMessages = (List<Message>) messageRepo.findAll();
-        List<Message> lastMessages = new LinkedList<>();
-        Set<User> users = new HashSet<>();
+        List<Chat> chats = new LinkedList<>();
+        Set<Long> ids = new HashSet<>();
 
-//        for (int i = allMessages.size() - 1; i >= 0; i--) {
-//            List<User> msgUsers = allMessages.get(i).getUsers();
-//
-//            if (msgUsers.contains(user)) {
-//                // if 0 -> 1 else 1 -> 0
-//                User newUser = msgUsers.get(msgUsers.indexOf(user) ^ 1);
-//                if (!users.contains(newUser)) {
-//                    users.add(newUser);
-//
-//                    List<User> newUserList = new LinkedList<>();
-//                    newUserList.add(newUser);
-//
-//                    Message msg = allMessages.get(i);
-//
-//                    msg.setUsers(newUserList);
-//
-//                    lastMessages.add(msg);
-//                }
-//            }
-//        }
+        for (int i = allMessages.size() - 1; i >= 0; i--) {
+            Message message = allMessages.get(i);
 
-        return lastMessages;
+            if (message.getReceiverId().equals(id) || message.getSenderId().equals(id)) {
+                Long uid =
+                        message.getReceiverId().equals(id) ? message.getSenderId() : message.getReceiverId();
+
+                if (!ids.contains(uid)) {
+                    ids.add(uid);
+                    User user = userRepo.findUsersById(uid);
+                    Chat chat = new Chat(user.getUsername(), message);
+                    chats.add(chat);
+                }
+            }
+        }
+
+        return chats;
     }
 
     public List<Message> getChat(Long id1, Long id2) {

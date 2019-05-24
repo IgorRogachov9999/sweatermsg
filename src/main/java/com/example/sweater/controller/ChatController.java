@@ -2,6 +2,7 @@ package com.example.sweater.controller;
 
 import com.example.sweater.domain.Message;
 import com.example.sweater.domain.User;
+import com.example.sweater.model.Chat;
 import com.example.sweater.repos.MessageRepo;
 import com.example.sweater.service.MessageService;
 import com.example.sweater.service.UserSevice;
@@ -37,7 +38,7 @@ public class ChatController {
 
     @GetMapping("/")
     public String main(Model model, @AuthenticationPrincipal User user) {
-        List<Message> chats = messageService.getChatsMessages(user);
+        List<Chat> chats = messageService.getChatsMessages(user.getId());
 
         model.addAttribute("chats", chats);
 
@@ -59,7 +60,23 @@ public class ChatController {
 
             List<Message> chat = messageService.getChat(user1.getId(), user2.getId());
 
+            if (chat.size() > 0) {
+                Message lastMessage = chat.get(0);
+
+                if (lastMessage.getReceiverId() == user.getId() &&
+                        !lastMessage.isRead()) {
+                    for (int i = 0; i < chat.size(); i++) {
+                        Message msg = chat.get(i);
+                        if (!msg.isRead()) {
+                            msg.setRead(true);
+                            messageRepo.save(msg);
+                        } else break;
+                    }
+                }
+            }
+
             List<User> users = new LinkedList<>();
+
             users.add(user1);
             users.add(user2);
 
