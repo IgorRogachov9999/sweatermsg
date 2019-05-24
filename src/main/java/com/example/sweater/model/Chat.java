@@ -5,13 +5,15 @@ import com.example.sweater.domain.Message;
 public class Chat {
     private String username;
     private Message message;
+    private String receiver;
 
     public Chat() {
     }
 
-    public Chat(String username, Message message) {
+    public Chat(String username, Message message, String receiver) {
         this.username = username;
         this.message = message;
+        this.receiver = receiver;
     }
 
     public String getUsername() {
@@ -28,5 +30,13 @@ public class Chat {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }

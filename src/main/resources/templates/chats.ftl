@@ -10,7 +10,11 @@
                     <small class="text-muted">${chat.message.timestamp?number_to_datetime}</small>
                 </div>
                 <p class="mb-1">${chat.message.text}</p>
-                <small class="text-muted"><#if !chat.message.read>You have unread messages</#if></small>
+                <#if !chat.message.read>
+                    <#if chat.receiver == name>
+                        <small class="text-muted">You have unread messages</small>
+                    </#if>
+                </#if>
             </a>
         <#else>
             <h5>No chats</h5>

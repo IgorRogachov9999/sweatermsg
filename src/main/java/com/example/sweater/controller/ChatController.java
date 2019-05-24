@@ -61,16 +61,10 @@ public class ChatController {
             List<Message> chat = messageService.getChat(user1.getId(), user2.getId());
 
             if (chat.size() > 0) {
-                Message lastMessage = chat.get(0);
-
-                if (lastMessage.getReceiverId() == user.getId() &&
-                        !lastMessage.isRead()) {
-                    for (int i = 0; i < chat.size(); i++) {
-                        Message msg = chat.get(i);
-                        if (!msg.isRead()) {
-                            msg.setRead(true);
-                            messageRepo.save(msg);
-                        } else break;
+                for (Message message : chat) {
+                    if (!message.isRead() && message.getReceiverId().equals(user.getId())) {
+                        message.setRead(true);
+                        messageRepo.save(message);
                     }
                 }
             }

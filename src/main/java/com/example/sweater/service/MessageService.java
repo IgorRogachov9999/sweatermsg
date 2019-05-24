@@ -36,7 +36,8 @@ public class MessageService {
                 if (!ids.contains(uid)) {
                     ids.add(uid);
                     User user = userRepo.findUsersById(uid);
-                    Chat chat = new Chat(user.getUsername(), message);
+                    User receiver = userRepo.findUsersById(message.getReceiverId());
+                    Chat chat = new Chat(user.getUsername(), message, receiver.getUsername());
                     chats.add(chat);
                 }
             }
