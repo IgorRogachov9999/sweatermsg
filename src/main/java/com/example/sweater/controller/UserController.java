@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@PreAuthorize("hasAuthority('USER')")
 public class UserController {
     @Autowired
     private UserSevice userSevice;

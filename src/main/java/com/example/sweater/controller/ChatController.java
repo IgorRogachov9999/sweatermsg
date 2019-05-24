@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.*;
 
 @Controller
-@PreAuthorize("hasAuthority('USER')")
 public class ChatController {
     @Autowired
     private MessageService messageService;
