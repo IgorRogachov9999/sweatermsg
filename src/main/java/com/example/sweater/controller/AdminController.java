@@ -36,7 +36,7 @@ public class AdminController {
         return "userEdit";
     }
 
-    @PostMapping
+    @PostMapping("{user}")
     public String userSave(
             @RequestParam String username,
             @RequestParam Map<String, String> form,
@@ -58,6 +58,6 @@ public class AdminController {
 
         userRepo.save(user);
 
-        return "redirect:/user";
+        return "redirect:/admin";
     }
 }
