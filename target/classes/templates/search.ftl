@@ -12,6 +12,6 @@
     <#list users as user>
         <div><br><a href="/user/${user.username}">${user.username}</a></div>
     <#else>
-        User is not found!
+        <div><br><h5>User is not found!</h5></div>
     </#list>
 </@c.page>

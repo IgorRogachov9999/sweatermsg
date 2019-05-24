@@ -18,9 +18,15 @@ public class UserController {
 
     @GetMapping("/user/{username}")
     public String profile(@PathVariable String username, Model model) {
-        model.addAttribute("username", username);
+        User user = userSevice.findUserByUsername(username);
 
-        return "profile";
+        if (user != null) {
+            model.addAttribute("username", username);
+
+            return "profile";
+        }
+
+        return "redirect:/";
     }
 
     @GetMapping("/edit")

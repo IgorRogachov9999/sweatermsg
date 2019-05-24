@@ -16,8 +16,6 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private boolean active;
-    private Long lastSeen;
-    private boolean online;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -91,21 +89,5 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public Long getLastSeen() {
-        return lastSeen;
-    }
-
-    public void setLastSeen(Long lastSeen) {
-        this.lastSeen = lastSeen;
-    }
-
-    public boolean isOnline() {
-        return online;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
     }
 }

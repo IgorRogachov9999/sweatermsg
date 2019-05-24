@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 @Service
 public class UserSevice implements UserDetailsService {
     @Autowired
@@ -17,6 +19,18 @@ public class UserSevice implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username);
+    }
+
+    public User findUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepo.findByUsername(username);
+    }
+
+    public List<User> loadUsersByUsernameLike(String username) throws UsernameNotFoundException {
+        return userRepo.findUsersByUsernameLike(username);
+    }
+
+    public List<User> findAll() {
+        return userRepo.findAll();
     }
 
     public void updateProfile(User user, String password) {

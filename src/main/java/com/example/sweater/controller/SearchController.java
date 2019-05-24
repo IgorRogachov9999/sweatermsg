@@ -1,7 +1,7 @@
 package com.example.sweater.controller;
 
 import com.example.sweater.domain.User;
-import com.example.sweater.repos.UserRepo;
+import com.example.sweater.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import java.util.List;
 @Controller
 public class SearchController {
     @Autowired
-    private UserRepo userRepo;
+    private UserSevice userSevice;
 
     @GetMapping("/search")
     public String search(
@@ -23,9 +23,9 @@ public class SearchController {
         List<User> users;
 
         if (username.equals("")) {
-            users = userRepo.findAll();
+            users = userSevice.findAll();
         } else {
-            users = userRepo.findUsersByUsernameLike(username);
+            users = userSevice.loadUsersByUsernameLike(username);
         }
 
         model.addAttribute("users", users);
