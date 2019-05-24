@@ -57,9 +57,14 @@ public class ChatController {
             User user1 = userSevice.findUserByUsername(username1);
             User user2 = userSevice.findUserByUsername(username2);
 
-            List<Message> chat = messageService.getChat(user1, user2);
+            List<Message> chat = messageService.getChat(user1.getId(), user2.getId());
+
+            List<User> users = new LinkedList<>();
+            users.add(user1);
+            users.add(user2);
 
             model.addAttribute("chat", chat);
+            model.addAttribute("users", users);
 
             return "chat";
         }
@@ -71,8 +76,7 @@ public class ChatController {
     public String takeMessage(@AuthenticationPrincipal User user,
                               Message message,
                        @PathVariable String username1,
-                       @PathVariable String username2,
-                       Model model
+                       @PathVariable String username2
     ) {
         if ((user.getUsername().equals(username1) ||
                 user.getUsername().equals(username2)) &&
@@ -81,11 +85,8 @@ public class ChatController {
                 User receiver = userSevice.findUserByUsername(
                         user.getUsername().equals(username1) ? username2 : username1);
 
-                List<User> users = new LinkedList<>();
-                users.add(user);
-                users.add(receiver);
-
-                message.setUsers(users);
+                message.setSenderId(user.getId());
+                message.setReceiverId(receiver.getId());
                 message.setRead(false);
                 message.setTimestamp(new Date().getTime());
 

@@ -45,18 +45,24 @@ public class MessageService {
         return lastMessages;
     }
 
-    public List<Message> getChat(User user1, User user2) {
+    public List<Message> getChat(Long id1, Long id2) {
         List<Message> allMessages = (List<Message>) messageRepo.findAll();
         List<Message> chat = new LinkedList<>();
+        Set<Long> users = new HashSet<>();
+
+        users.add(id1);
+        users.add(id2);
 
         for (int i = allMessages.size() - 1; i >= 0; i--) {
-            List<User> users = allMessages.get(i).getUsers();
+            Message message = allMessages.get(i);
 
-            if (users.contains(user1) && users.contains(user2)) {
-                chat.add(allMessages.get(i));
+            if (users.contains(message.getReceiverId()) && users.contains(message.getSenderId())) {
+                chat.add(message);
             }
         }
 
         return chat;
+
+
     }
 }

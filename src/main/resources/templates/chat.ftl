@@ -17,9 +17,11 @@
         <#list chat as message>
             <div class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
-                    <#list message.users as user>
-                        <h5 class="mb-1"><a href="/user/${user.username}">${user.username}</a></h5>
-                        <#break>
+                    <#list users as user>
+                        <#if user.id == message.senderId>
+                            <h5 class="mb-1"><a href="/user/${user.username}">${user.username}</a></h5>
+                            <#break>
+                        </#if>
                     </#list>
                     <small class="text-muted">${message.timestamp?number_to_datetime}</small>
                 </div>

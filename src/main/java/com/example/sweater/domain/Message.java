@@ -1,8 +1,9 @@
 package com.example.sweater.domain;
 
-import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Message {
@@ -13,18 +14,9 @@ public class Message {
     private String text;
     private Long timestamp;
     private boolean read;
+    private Long senderId;
+    private Long receiverId;
 
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.MERGE,
-                    CascadeType.REFRESH
-            })
-    @JoinTable(
-            name = "message_user",
-            joinColumns = { @JoinColumn(name = "message_id", referencedColumnName="id")},
-            inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName="id") }
-    )
-    List<User> users = new LinkedList<>();
 
     public Message() {
 
@@ -32,14 +24,6 @@ public class Message {
 
     public Message(String text) {
         this.text = text;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 
     public void setText(String text) {
@@ -72,5 +56,21 @@ public class Message {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public Long getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
     }
 }
