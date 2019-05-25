@@ -4,7 +4,13 @@
         <div class="form-group mt-3">
             <form method="post">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="text" placeholder="Message" />
+                    <input type="text" class="form-control ${(textError??)?string('is-invalid', '')}"
+                           name="text" placeholder="Message" value="<#if message??>${message.text}</#if>"/>
+                    <#if textError??>
+                        <div class="invalid-feedback">
+                            ${textError}
+                        </div>
+                    </#if>
                 </div>
                 <input type="hidden" name="_csrf" value="${_csrf.token}" />
                 <div class="form-group">

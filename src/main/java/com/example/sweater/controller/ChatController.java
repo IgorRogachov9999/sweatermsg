@@ -4,24 +4,26 @@ import com.example.sweater.domain.Message;
 import com.example.sweater.domain.User;
 import com.example.sweater.model.Chat;
 import com.example.sweater.repos.MessageRepo;
+import com.example.sweater.security.SecurityValidator;
 import com.example.sweater.service.MessageService;
 import com.example.sweater.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class ChatController {
@@ -86,23 +88,32 @@ public class ChatController {
 
     @PostMapping("/chat/{username1}/{username2}")
     public String takeMessage(@AuthenticationPrincipal User user,
-                              Message message,
-                       @PathVariable String username1,
-                       @PathVariable String username2
+                              @Valid Message message,
+                              BindingResult bindingResult,
+                              Model model,
+                              @PathVariable String username1,
+                              @PathVariable String username2
     ) {
         if ((user.getUsername().equals(username1) ||
                 user.getUsername().equals(username2)) &&
                 !username1.equals(username2)) {
 
+            if (bindingResult.hasErrors()) {
+                Map<String, String> errorMap = ControllerUtils.getErrorMap(bindingResult);
+
+                model.mergeAttributes(errorMap);
+            } else {
                 User receiver = userSevice.findUserByUsername(
                         user.getUsername().equals(username1) ? username2 : username1);
 
+                message.setText(SecurityValidator.XSSValidate(message.getText()));
                 message.setSenderId(user.getId());
                 message.setReceiverId(receiver.getId());
                 message.setRead(false);
                 message.setTimestamp(new Date().getTime());
 
                 messageRepo.save(message);
+            }
 
             return "redirect:/chat/" + username1 + "/" + username2;
         }

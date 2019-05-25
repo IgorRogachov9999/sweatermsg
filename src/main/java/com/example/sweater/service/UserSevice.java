@@ -2,10 +2,12 @@ package com.example.sweater.service;
 
 import com.example.sweater.domain.User;
 import com.example.sweater.repos.UserRepo;
+import com.example.sweater.security.SecurityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,9 +18,18 @@ public class UserSevice implements UserDetailsService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+        UserDetails userDetails = userRepo.findByUsername(username);
+
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("User not found!");
+        }
+
+        return userDetails;
     }
 
     public User findUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,9 +46,9 @@ public class UserSevice implements UserDetailsService {
 
     public void updateProfile(User user, String password) {
         if (!StringUtils.isEmpty(password)) {
-            user.setPassword(password);
+            user.setPassword(
+                    passwordEncoder.encode(SecurityValidator.XSSValidate(password)));
+            userRepo.save(user);
         }
-
-        userRepo.save(user);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sweater.controller;
 
 import com.example.sweater.domain.User;
+import com.example.sweater.security.SecurityValidator;
 import com.example.sweater.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
