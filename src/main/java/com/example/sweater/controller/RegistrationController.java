@@ -5,7 +5,6 @@ import com.example.sweater.domain.User;
 import com.example.sweater.repos.UserRepo;
 import com.example.sweater.security.SecurityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Map;
 
 @Controller
 public class RegistrationController {
@@ -50,8 +48,8 @@ public class RegistrationController {
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setUsername(SecurityValidator.XSSValidate(user.getUsername()));
-        user.setPassword(passwordEncoder.encode(
-                SecurityValidator.XSSValidate(user.getPassword())));
+        user.setPassword(
+                passwordEncoder.encode(SecurityValidator.XSSValidate(user.getPassword())));
 
         userRepo.save(user);
 

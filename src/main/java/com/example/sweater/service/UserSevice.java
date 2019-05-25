@@ -45,10 +45,15 @@ public class UserSevice implements UserDetailsService {
     }
 
     public void updateProfile(User user, String password) {
-        if (!StringUtils.isEmpty(password)) {
-            user.setPassword(
-                    passwordEncoder.encode(SecurityValidator.XSSValidate(password)));
+        user.setPassword(
+                passwordEncoder.encode(SecurityValidator.XSSValidate(password)));
+
+        System.out.println(user.getPassword());
+
+        try {
             userRepo.save(user);
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
     }
 }

@@ -3,9 +3,7 @@
 
 <@c.page>
     <h5>${username}</h5>
-    <#if username == name>
-        <a href="/edit">Edit</a>
-    <#else>
+    <#if username != name>
         <a href="/chat/${name}/${username}">Send</a>
     </#if>
     ${message?ifExists}

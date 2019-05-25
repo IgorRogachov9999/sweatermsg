@@ -1,5 +1,7 @@
 package com.example.sweater.config;
 
+import com.example.sweater.domain.Role;
+import com.example.sweater.domain.User;
 import com.example.sweater.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,9 +11,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
@@ -48,5 +55,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userSevice)
                 .passwordEncoder(passwordEncoder);
+    }
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        User user = new User();
+
+        Set<Role> roles = new HashSet<>();
+
+        roles.add(Role.USER);
+        roles.add(Role.ADMIN);
+
+        user.setId(1L);
+        user.setUsername("admin");
+        user.setPassword(passwordEncoder.encode("admin"));
+        user.setActive(true);
+        user.setRoles(roles);
+
+        return new InMemoryUserDetailsManager((UserDetails) user);
     }
 }
