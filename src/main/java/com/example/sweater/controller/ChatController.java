@@ -9,6 +9,7 @@ import com.example.sweater.service.MessageService;
 import com.example.sweater.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@PreAuthorize("hasAuthority('USER')")
 public class ChatController {
     @Autowired
     private MessageService messageService;
